@@ -1,0 +1,111 @@
+-- Criando database;
+CREATE DATABASE loja;
+USE loja;
+
+-- Criando tabela cliente ;
+CREATE TABLE cliente (
+    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    nome VARCHAR(45),
+    telefone VARCHAR(45),
+    email VARCHAR(45)
+);
+
+-- Criando tabela venda ;
+CREATE TABLE venda (
+    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    valor_total DECIMAL(10 , 2 ),
+    data DATETIME,
+    cliente_id INT,
+    vendedor_id INT,
+    pagamento_id INT
+);
+
+-- Criando tabela vendedor;
+CREATE TABLE vendedor (
+    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    nome VARCHAR(45)
+);
+
+-- Criando tabela PAGAMENTO;
+CREATE TABLE pagamento(
+id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+forma_pagamento VARCHAR(45)
+);
+
+-- CRIANDO TABELA VENDA DO venda_has_PRODUTO;
+CREATE TABLE venda_has_produto (
+    venda_id INT,
+    produto_id INT
+);
+
+-- CRIANDO TABELA PRODUTO;
+ CREATE TABLE produto (
+    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    nome VARCHAR(45),
+    preco DECIMAL(10 , 2 ),
+    qtd_estoque VARCHAR(45),
+    categoria_id INT,
+    fornecedor_id INT
+);
+
+-- Criando tabela categoria 
+CREATE TABLE categoria (
+    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    nome VARCHAR(45)
+);
+
+-- Criando tabela fornecedores
+CREATE TABLE fornecedores (
+    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    cnpj VARCHAR(14) UNIQUE NOT NULL,
+    nome VARCHAR(45)
+);
+
+-- Relacioanmento de 1 para muitos 	entre cliente e a venda;
+ALTER TABLE venda 
+	ADD 
+	CONSTRAINT fk_venda_cliente  
+	FOREIGN KEY (cliente_id) 
+	REFERENCES cliente (id);
+
+-- Relacioanmento de 1 para muitos 	entre vendedor a venda;
+ALTER TABLE venda
+	ADD
+	CONSTRAINT fk_venda_vendedor 
+	FOREIGN KEY (vendedor_id)
+	REFERENCES vendedor(id);
+
+-- Relacionamento de 1 para muitos entre pagamento e venda ;
+ALTER TABLE venda
+	ADD
+	CONSTRAINT fk_venda_pagamento 
+	FOREIGN KEY (pagamento_id)
+	REFERENCES pagamento(id);
+
+-- Relacioanemnto de 1 para muitos entre venda e venda_has_produto;
+ALTER TABLE venda_has_produto
+	ADD
+	CONSTRAINT fk_venda_venda_has_produto
+	FOREIGN KEY (venda_id)
+	REFERENCES venda(id);
+
+-- Relacionamento de um para muitos entre produto e venda_has_produto
+ALTER TABLE venda_has_produto
+	ADD
+	CONSTRAINT fk_produto_venda_has_produto
+	FOREIGN KEY (produto_id)
+	REFERENCES produto(id);
+
+-- Relacionamento  de uma para muitos entre produto e categoria 
+ALTER TABLE produto
+	ADD
+	CONSTRAINT fk_produto_categoria
+	FOREIGN KEY (categoria_id)
+	REFERENCES categoria(id);
+
+-- Relacioanemnto de um para muitos entre produto e fornecedores;
+ALTER TABLE produto 
+	ADD
+	CONSTRAINT fk_produto_fornecedores
+	FOREIGN KEY (fornecedor_id)
+	REFERENCES fornecedores(id);
